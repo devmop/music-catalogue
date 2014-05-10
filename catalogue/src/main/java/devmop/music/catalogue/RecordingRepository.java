@@ -9,4 +9,5 @@ public interface RecordingRepository
   public Recording find(ID id);
   public void update(final ID id, final Recording recording);
   public void delete(final ID id);
+  public void deleteAll();
 }

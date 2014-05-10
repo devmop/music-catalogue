@@ -39,6 +39,12 @@ class MapBackedRecordingRepository implements RecordingRepository
     recordings.remove(id)
   }
 
+  @Override
+  void deleteAll()
+  {
+    recordings = [:]
+  }
+
   private void checkKeyExists(ID id)
   {
     if (!recordings.containsKey(id)) {

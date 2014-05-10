@@ -6,6 +6,7 @@ import org.junit.Test
 import static org.hamcrest.MatcherAssert.assertThat
 import static org.hamcrest.Matchers.equalTo
 import static org.hamcrest.Matchers.nullValue
+import static org.junit.Assert.fail
 
 /**
  * @author ( michael )
@@ -52,7 +53,7 @@ class RecordingRepositoryTest
   @Test(expected = NotFoundException)
   void canDeleteARecordingFromTheRepository()
   {
-    def id = repository.create(makeRecording())
+    def id = addNewRecording()
     repository.delete(id);
     repository.find(id);
   }
@@ -63,9 +64,41 @@ class RecordingRepositoryTest
     repository.delete(createId())
   }
 
+  @Test
+  void canDeleteEverything() {
+    def id1 = addNewRecording()
+    def id2 = addNewRecording()
+    def id3 = addNewRecording()
+
+    repository.deleteAll();
+
+    assertAbsent(id1, id2, id3)
+  }
+
+  void assertAbsent(final ID... ids)
+  {
+    ids.each
+    { ID it ->
+      try
+      {
+        repository.find(it)
+        fail()
+      }
+      catch (NotFoundException e)
+      {
+
+      }
+    }
+  }
+
   private ID createId()
   {
     new ID()
+  }
+
+  private ID addNewRecording()
+  {
+    repository.create(makeRecording())
   }
 
   private Recording makeRecording()
