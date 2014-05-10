@@ -11,4 +11,14 @@ public class Recording
   {
     title_ = title;
   }
+
+  public String getTitle()
+  {
+    return title_;
+  }
+
+  public Recording withTitle(final String title)
+  {
+    return new Recording(title);
+  }
 }
