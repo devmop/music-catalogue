@@ -13,7 +13,7 @@ class MapBackedRecordingRepository implements RecordingRepository
   @Override
   ID create(final Recording recording)
   {
-    def id = new ID()
+    def id = new ID(0L)
     recordings.put(id, recording)
     return id
   }

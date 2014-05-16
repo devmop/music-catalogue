@@ -15,11 +15,12 @@ subprojects {
   }
 }
 
-/*
+
 project(':catalogue') {
   dependencies {
     compile 'org.jooq:jooq:3.3.2'
     compile 'com.h2database:h2:1.4.177'
+    compile 'com.googlecode.flyway:flyway-core:2.3'
   }
 }
-*/
+
