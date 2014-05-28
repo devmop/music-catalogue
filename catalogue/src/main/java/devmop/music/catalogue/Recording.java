@@ -9,7 +9,10 @@ public class Recording implements Equality<Recording>
 
   public Recording(final String title)
   {
-    assert title != null;
+    if (title == null)
+    {
+      throw new IllegalArgumentException();
+    }
     title_ = title;
   }
 
