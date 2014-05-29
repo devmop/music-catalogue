@@ -52,7 +52,6 @@ public class RepositoryFactory
   private void migrateDatabase(final DataSource dataSource)
   {
     Flyway flyway = new Flyway();
-    flyway.setInitOnMigrate(true);
     flyway.setDataSource(dataSource);
     flyway.migrate();
   }

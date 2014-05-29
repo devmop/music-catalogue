@@ -2,25 +2,24 @@ package devmop.music.catalogue;
 
 import java.util.Arrays;
 
-import org.h2.jdbcx.JdbcDataSource;
-import org.jooq.SQLDialect;
-import org.jooq.impl.DSL;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.nullValue;
+import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
 import static devmop.music.catalogue.RepositoryFactory.Implementation.*;
 
-import com.googlecode.flyway.core.Flyway;
 /**
  * @author ( michael )
  */
 @RunWith(Parameterized.class)
 public class RecordingRepositoryTest
 {
+  private static int DBCOUNT = 0;
+
   @Parameterized.Parameters(name = "{1}")
   @SuppressWarnings("unchecked")
   public static Iterable<Object[]> implementations()
@@ -38,7 +37,7 @@ public class RecordingRepositoryTest
   private static RecordingRepository database()
   {
     return new RepositoryFactory(DATABASE,
-        "jdbc:h2:mem:test;DB_CLOSE_DELAY=-1;MODE=PostgreSQL").build();
+        "jdbc:h2:mem:test" + (DBCOUNT++) + ";DB_CLOSE_DELAY=-1;MODE=PostgreSQL").build();
   }
 
   final RecordingRepository repository;
@@ -61,7 +60,7 @@ public class RecordingRepositoryTest
     ID id = repository.create(recording);
     Recording retrievedRecording = repository.find(id);
 
-    assert retrievedRecording.equalTo(recording);
+    assertTrue(retrievedRecording.equalTo(recording));
   }
 
   @Test
@@ -73,7 +72,7 @@ public class RecordingRepositoryTest
     repository.update(id, updated);
 
     Recording retrieved = repository.find(id);
-    assert retrieved.equalTo(updated);
+    assertTrue(retrieved.equalTo(updated));
   }
 
   @Test(expected = NotFoundException.class)
