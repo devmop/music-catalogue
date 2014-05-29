@@ -1,6 +1,7 @@
 package devmop.music.catalogue;
 
-import com.googlecode.flyway.core.Flyway;
+import java.util.Arrays;
+
 import org.h2.jdbcx.JdbcDataSource;
 import org.jooq.SQLDialect;
 import org.jooq.impl.DSL;
@@ -8,24 +9,23 @@ import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
-
-import java.util.Arrays;
-
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.nullValue;
 import static org.junit.Assert.fail;
+
+import com.googlecode.flyway.core.Flyway;
 /**
  * @author ( michael )
  */
 @RunWith(Parameterized.class)
 public class RecordingRepositoryTest
 {
-  @Parameterized.Parameters
+  @Parameterized.Parameters(name = "{1}")
   @SuppressWarnings("unchecked")
   public static Iterable<Object[]> implementations()
   {
-    Object[] mapBacked = new Object[]{new MapBackedRecordingRepository()};
-    Object[] databaseBacked = new Object[]{setupDatabase()};
+    Object[] mapBacked = new Object[]{new MapBackedRecordingRepository(), "map"};
+    Object[] databaseBacked = new Object[]{setupDatabase(), "database"};
     return (Iterable) Arrays.asList(mapBacked, databaseBacked);
   }
 
@@ -41,7 +41,7 @@ public class RecordingRepositoryTest
 
   final RecordingRepository repository;
 
-  public RecordingRepositoryTest(final RecordingRepository repository)
+  public RecordingRepositoryTest(final RecordingRepository repository, String name)
   {
     this.repository = repository;
   }
