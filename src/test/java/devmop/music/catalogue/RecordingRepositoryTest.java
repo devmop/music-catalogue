@@ -12,6 +12,7 @@ import org.junit.runners.Parameterized;
 import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.nullValue;
 import static org.junit.Assert.fail;
+import static devmop.music.catalogue.RepositoryFactory.Implementation.*;
 
 import com.googlecode.flyway.core.Flyway;
 /**
@@ -24,19 +25,20 @@ public class RecordingRepositoryTest
   @SuppressWarnings("unchecked")
   public static Iterable<Object[]> implementations()
   {
-    Object[] mapBacked = new Object[]{new MapBackedRecordingRepository(), "map"};
-    Object[] databaseBacked = new Object[]{setupDatabase(), "database"};
+    Object[] mapBacked = new Object[]{map(), "map"};
+    Object[] databaseBacked = new Object[]{database(), "database"};
     return (Iterable) Arrays.asList(mapBacked, databaseBacked);
   }
 
-  private static DatabaseBackedRecordingRepository setupDatabase() {
-    JdbcDataSource source = new JdbcDataSource();
-    source.setURL("jdbc:h2:mem:test;DB_CLOSE_DELAY=-1;MODE=PostgreSQL");
-    Flyway flyway = new Flyway();
-    flyway.setInitOnMigrate(true);
-    flyway.setDataSource(source);
-    flyway.migrate();
-    return new DatabaseBackedRecordingRepository(DSL.using(source, SQLDialect.POSTGRES));
+  private static RecordingRepository map()
+  {
+    return new RepositoryFactory(MAP, null).build();
+  }
+
+  private static RecordingRepository database()
+  {
+    return new RepositoryFactory(DATABASE,
+        "jdbc:h2:mem:test;DB_CLOSE_DELAY=-1;MODE=PostgreSQL").build();
   }
 
   final RecordingRepository repository;

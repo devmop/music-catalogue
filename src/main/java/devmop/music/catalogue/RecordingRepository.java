@@ -10,4 +10,5 @@ public interface RecordingRepository
   void update(final ID id, final Recording recording);
   void delete(final ID id);
   void deleteAll();
+
 }
