@@ -1,5 +1,7 @@
 package devmop.music.catalogue;
 
+import com.fasterxml.jackson.annotation.JsonCreator;
+import com.fasterxml.jackson.annotation.JsonProperty;
 import com.googlecode.flyway.core.Flyway;
 import com.googlecode.flyway.core.util.jdbc.DriverDataSource;
 import org.jooq.SQLDialect;
@@ -20,7 +22,9 @@ public class RepositoryFactory
   private final Implementation implementation_;
   private final String jdbcUrl_;
 
-  public RepositoryFactory(Implementation implementation, String jdbcUrl) {
+  @JsonCreator
+  public RepositoryFactory(@JsonProperty("implementation") Implementation implementation,
+                            @JsonProperty("jdbc-url") String jdbcUrl) {
     implementation_ = implementation == null ? Implementation.MAP : implementation;
     jdbcUrl_ = jdbcUrl;
 

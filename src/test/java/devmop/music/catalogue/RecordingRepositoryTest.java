@@ -2,6 +2,7 @@ package devmop.music.catalogue;
 
 import java.util.Arrays;
 
+import devmop.music.catalogue.api.RecordingAPI;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -26,7 +27,13 @@ public class RecordingRepositoryTest
   {
     Object[] mapBacked = new Object[]{map(), "map"};
     Object[] databaseBacked = new Object[]{database(), "database"};
-    return (Iterable) Arrays.asList(mapBacked, databaseBacked);
+    Object[] api = new Object[]{api(), "api"};
+    return (Iterable) Arrays.asList(mapBacked, databaseBacked, api);
+  }
+
+  private static RecordingRepository api()
+  {
+    return new RecordingAPI(map());
   }
 
   private static RecordingRepository map()
