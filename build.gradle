@@ -17,8 +17,12 @@ subprojects {
   jacoco {
     toolVersion = '0.7.0.201403182114'
   }
-}
 
+  tasks.withType(JavaCompile) {
+    options.encoding = 'UTF-8'
+    options.compilerArgs << '-Werror' << '-Xlint:unchecked' << '-Xlint:-options'
+  }
+}
 
 project(':catalogue') {
   dependencies {
