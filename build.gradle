@@ -18,6 +18,7 @@ repositories {
 
 dependencies {
   compile 'io.dropwizard:dropwizard-core:0.7.0'
+  compile 'com.netflix.feign:feign-jackson:6.1.2'
   compile 'org.jooq:jooq:3.3.2'
   compile 'com.h2database:h2:1.4.177'
   compile 'com.googlecode.flyway:flyway-core:2.3'

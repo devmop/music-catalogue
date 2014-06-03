@@ -2,8 +2,8 @@ package devmop.music.catalogue;
 
 import java.util.Arrays;
 
-import devmop.music.catalogue.api.RecordingAPI;
 import org.junit.Before;
+import org.junit.ClassRule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.junit.runners.Parameterized;
@@ -11,7 +11,14 @@ import static org.hamcrest.MatcherAssert.assertThat;
 import static org.hamcrest.Matchers.nullValue;
 import static org.junit.Assert.assertTrue;
 import static org.junit.Assert.fail;
-import static devmop.music.catalogue.RepositoryFactory.Implementation.*;
+
+import devmop.music.catalogue.api.Configuration;
+import devmop.music.catalogue.api.RecordingAPI;
+import devmop.music.catalogue.api.RepositoryService;
+
+import static devmop.music.catalogue.RepositoryFactory.Implementation.DATABASE;
+import static devmop.music.catalogue.RepositoryFactory.Implementation.MAP;
+import static devmop.music.catalogue.RepositoryFactory.Implementation.REMOTE;
 
 /**
  * @author ( michael )
@@ -21,14 +28,18 @@ public class RecordingRepositoryTest
 {
   private static int DBCOUNT = 0;
 
+  @ClassRule
+  public static final DropwizardAppRule<Configuration> SERVICE
+          = new DropwizardAppRule<Configuration>(RepositoryService.class, "config/test/test-config.yml");
+
   @Parameterized.Parameters(name = "{1}")
   @SuppressWarnings("unchecked")
-  public static Iterable<Object[]> implementations()
-  {
+  public static Iterable<Object[]> implementations() throws Throwable {
     Object[] mapBacked = new Object[]{map(), "map"};
     Object[] databaseBacked = new Object[]{database(), "database"};
     Object[] api = new Object[]{api(), "api"};
-    return (Iterable) Arrays.asList(mapBacked, databaseBacked, api);
+    Object[] client = new Object[]{client(), "client"};
+    return (Iterable) Arrays.asList(mapBacked, databaseBacked, api, client);
   }
 
   private static RecordingRepository api()
@@ -38,13 +49,18 @@ public class RecordingRepositoryTest
 
   private static RecordingRepository map()
   {
-    return new RepositoryFactory(MAP, null).build();
+    return new RepositoryFactory(MAP, null, null).build();
   }
 
   private static RecordingRepository database()
   {
     return new RepositoryFactory(DATABASE,
-        "jdbc:h2:mem:test" + (DBCOUNT++) + ";DB_CLOSE_DELAY=-1;MODE=PostgreSQL").build();
+        "jdbc:h2:mem:test" + (DBCOUNT++) + ";DB_CLOSE_DELAY=-1;MODE=PostgreSQL", null).build();
+  }
+
+  private static RecordingRepository client() throws Throwable {
+    SERVICE.before(); //start service now. ClassRule is run at the wrong time
+    return new RepositoryFactory(REMOTE, null, "localhost:" + SERVICE.getLocalPort()).build();
   }
 
   final RecordingRepository repository;
